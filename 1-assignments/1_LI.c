@@ -29,9 +29,9 @@ int main(int argc, char *argv[])
     int *fd2 = malloc(sizeof(int) * 100);
     if(strcmp(argv[1],"-p") != 0)
     {
-        printf("fs");
-        *fd1 = open(argv[1], O_RDWR | O_EXCL );
-        *fd2 = open(argv[2], O_RDWR | O_EXCL );
+        printf("fs")    
+        *fd1 = open(argv[1], O_RDWR | O_EXCL , 0777);
+        *fd2 = open(argv[2], O_RDWR | O_EXCL , 0777);
         file_op(fd1, fd2, argv);
     }
     else
@@ -65,8 +65,8 @@ int file_op(int *fd1, int *fd2, char *argv[])
 {
     if(*fd2 == -1)
     {
-        *fd2 = open(argv[2], O_RDWR | O_CREAT );
-        perror("r1");
+        *fd2 = open(argv[2], O_RDWR | O_CREAT , 0777 );
+        //perror("r1");
     }
     else
     {
@@ -74,7 +74,7 @@ int file_op(int *fd1, int *fd2, char *argv[])
         char k = getchar();
         if(k == 'Y' | k == 'y')
         {
-            *fd2 = open(argv[2], O_RDWR | O_CREAT );
+            *fd2 = open(argv[2], O_RDWR | O_CREAT , 0777);
         }
         else
         {

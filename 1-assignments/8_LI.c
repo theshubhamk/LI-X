@@ -50,6 +50,7 @@ int main()
                         printf("child %d terminated normally\n", p_id);
                         printf("child ststus %d\n",  WEXITSTATUS(status));
                     }
+                    
                 }
             }
         }
