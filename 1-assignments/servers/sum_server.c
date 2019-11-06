@@ -37,31 +37,32 @@ int main()
 
     /* listen for incoming connections */
     listen(sock_fd, SERVER_LENGTH);
+    while(1)
+    {
+        /* If there are any, accept and create a new data socket */
+        data_sock_fd = accept(sock_fd, (struct sockaddr*)NULL, NULL); 
 
-    /* If there are any, accept and create a new data socket */
-    data_sock_fd = accept(sock_fd, (struct sockaddr*)NULL, NULL); 
-
-    memset(serv_buffer, 0, sizeof(serv_buffer));
-    /* Try to get some actual data from client */
-    recv(data_sock_fd, (void *) serv_buffer,SERVER_BUFF,0);
-    
-    char *num1, *num2;
-    num1 = strtok(serv_buffer, "+");
-    num2 = strtok(NULL, "+");
-    
-    int res = atoi(num1) + atoi(num2);
-    char k[10];
-    //k[0] = res - '0'; 
-    printf("Result sum %d\n", res);
-    sprintf(k, "%d", res);
-    printf("res in string %s\n", k);
-    c_size = send(data_sock_fd, k, 10, 0);
-    
-    if(c_size > 0)
-	printf("socket sent to server successsfully, please check\n");
-    else
-	printf("Error: Message send\n");
-
+        memset(serv_buffer, 0, sizeof(serv_buffer));
+        /* Try to get some actual data from client */
+        recv(data_sock_fd, (void *) serv_buffer,SERVER_BUFF,0);
+        
+        char *num1, *num2;
+        num1 = strtok(serv_buffer, "+");
+        num2 = strtok(NULL, "+");
+        
+        int res = atoi(num1) + atoi(num2);
+        char k[10];
+        //k[0] = res - '0'; 
+        printf("Result sum %d\n", res);
+        sprintf(k, "%d", res);
+        printf("res in string %s\n", k);
+        c_size = send(data_sock_fd, k, 10, 0);
+        
+        if(c_size > 0)
+        printf("socket sent to server successsfully, please check\n");
+        else
+        printf("Error: Message send\n");
+    }
     /* Close the sockets now */
     close(data_sock_fd);
     close(sock_fd);

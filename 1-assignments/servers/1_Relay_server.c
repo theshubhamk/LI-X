@@ -36,60 +36,62 @@ int main()
 
     /* listen for incoming connections */
     listen(sock_fd, SERVER_LENGTH);
-
-    /* If there are any, accept and create a new data socket */
-    data_sock_fd = accept(sock_fd, (struct sockaddr*)NULL, NULL); 
-
-   // memset(serv_buffer, 0, sizeof(serv_buffer));
-    /* Try to get some actual data from client */
-    recv(data_sock_fd, (void *) serv_buffer,SERVER_BUFF,0);
-    printf("%c\n", serv_buffer[0]);
-    switch(serv_buffer[0])
+    
+    while(1)
     {
-        case '+':
-            
-            c_size = send(data_sock_fd, "8085", 5, 0);
-            printf("jj\n"); 
-            if(c_size > 0)
+        /* If there are any, accept and create a new data socket */
+        data_sock_fd = accept(sock_fd, (struct sockaddr*)NULL, NULL); 
+
+    // memset(serv_buffer, 0, sizeof(serv_buffer));
+        /* Try to get some actual data from client */
+        recv(data_sock_fd, (void *) serv_buffer,SERVER_BUFF,0);
+        printf("%c\n", serv_buffer[0]);
+        switch(serv_buffer[0])
+        {
+            case '+':
+                
+                c_size = send(data_sock_fd, "8085", 5, 0);
+                printf("jj\n"); 
+                if(c_size > 0)
+                    printf("socket sent to server successsfully, please check\n");
+                else
+                    printf("Error: Message send\n");
+            break;
+            case '-':
+                c_size = send(data_sock_fd, "8086", 5, 0);
+
+                if(c_size > 0)
                 printf("socket sent to server successsfully, please check\n");
-            else
+                else
                 printf("Error: Message send\n");
+            break;
+            case '*':
+                c_size = send(data_sock_fd, "8087", 5, 0);
+
+                if(c_size > 0)
+                printf("socket sent to server successsfully, please check\n");
+                else
+                printf("Error: Message send\n");
+            break;
+        case '/':
+            c_size = send(data_sock_fd, "8088", 5, 0);
+
+        if(c_size > 0)
+        printf("socket sent to server successsfully, please check\n");
+        else
+        printf("Error: Message send\n");
         break;
-        case '-':
-            c_size = send(data_sock_fd, "2000", 5, 0);
+        case '%':
+            c_size = send(data_sock_fd, "8089", 5, 0);
 
-            if(c_size > 0)
-            printf("socket sent to server successsfully, please check\n");
-            else
-            printf("Error: Message send\n");
+        if(c_size > 0)
+        printf("socket sent to server successsfully, please check\n");
+        else
+        printf("Error: Message send\n");
         break;
-        case '*':
-            c_size = send(data_sock_fd, "3000", 5, 0);
 
-            if(c_size > 0)
-            printf("socket sent to server successsfully, please check\n");
-            else
-            printf("Error: Message send\n");
-        break;
-    case '/':
-        c_size = send(data_sock_fd, "4000", 5, 0);
-
-    if(c_size > 0)
-	printf("socket sent to server successsfully, please check\n");
-    else
-	printf("Error: Message send\n");
-    break;
-    case '%':
-        c_size = send(data_sock_fd, "5000", 5, 0);
-
-    if(c_size > 0)
-	printf("socket sent to server successsfully, please check\n");
-    else
-	printf("Error: Message send\n");
-    break;
-
+        }
     }
-
     /* Print the data received from client */
     //printf("Here is the client data: %s\n",serv_buffer);
 

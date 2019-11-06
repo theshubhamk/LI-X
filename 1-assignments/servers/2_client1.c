@@ -34,99 +34,103 @@ int main()
     char serv_buffer[SERVER_BUFF];
     struct sockaddr_in serv_addr; 
 
-    // Create a client socket 
-    if((sock_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    while(1)
     {
-        printf("Error: Could not create socket\n");
-        return 1;
-    } 
-
-    // Binding with client socket is optional here
-
-    // Populate it with server's address details 
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(SERVER_PORT); 
-    serv_addr.sin_addr.s_addr = inet_addr(SERVER_IP_ADDRESS);
-
-    //Get the message from client
-    printf("Enter the message you want to sent to server:\n");
-    gets(client_buff);
-    char input[20];
-    strcpy(input, client_buff);
-    //Loop to check for operator
-    for(i = 0; i < strlen(input); i++)
-    {
-        if(!(isdigit(input[i])))
+        // Create a client socket 
+        if((sock_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
         {
-            break;
+            printf("Error: Could not create socket\n");
+            return 1;
+        } 
+
+        // Binding with client socket is optional here
+
+        // Populate it with server's address details 
+        serv_addr.sin_family = AF_INET;
+        serv_addr.sin_port = htons(SERVER_PORT); 
+        serv_addr.sin_addr.s_addr = inet_addr(SERVER_IP_ADDRESS);
+
+    
+        //Get the message from client
+        printf("Enter the message you want to sent to server:\n");
+        gets(client_buff);
+        char input[20];
+        strcpy(input, client_buff);
+        //Loop to check for operator
+        for(i = 0; i < strlen(input); i++)
+        {
+            if(!(isdigit(input[i])))
+            {
+                break;
+            }
+            
         }
+        if(connect(sock_fd, (struct sockaddr *)&serv_addr,sizeof(serv_addr)) != 0)
+        {
+            perror("connect");
+            printf("Error connecting to server\n");
+            close(sock_fd);
+            exit(1);
+        }
+        else
+        printf("Connection successful\n");
+
+    //Send the message to server 
+        printf("%c\n",client_buff[i]);
+        c_size = send(sock_fd, &client_buff[i], 1, 0);
+
+        if(c_size > 0)
+            printf("Message sent to server successsfully, please check\n");
+        else
+            printf("Error: Message send\n");
         
-    }
-    if(connect(sock_fd, (struct sockaddr *)&serv_addr,sizeof(serv_addr)) != 0)
-    {
-        perror("connect");
-        printf("Error connecting to server\n");
+        recv(sock_fd, (void *) serv_buffer,SERVER_BUFF,0);
+        printf("Receved port %s\n", serv_buffer);
         close(sock_fd);
-        exit(1);
-    }
-    else
-	printf("Connection successful\n");
-
-   //Send the message to server 
-    printf("%c\n",client_buff[i]);
-    c_size = send(sock_fd, &client_buff[i], 1, 0);
-
-    if(c_size > 0)
-	    printf("Message sent to server successsfully, please check\n");
-    else
-	    printf("Error: Message send\n");
-    
-    recv(sock_fd, (void *) serv_buffer,SERVER_BUFF,0);
-    printf("Receved port %s\n", serv_buffer);
-    close(sock_fd);
 
 
-/////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////
 
-    /* Create a client socket */
-    if((sock_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-    {
-        printf("Error: Could not create socket\n");
-        return 1;
-    } 
+        /* Create a client socket */
+        if((sock_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+        {
+            printf("Error: Could not create socket\n");
+            return 1;
+        } 
 
-    /* Binding with client socket is optional here */
+        /* Binding with client socket is optional here */
 
-    /* Populate it with server's address details */
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons((uint16_t)(atoi(serv_buffer))); 
-    serv_addr.sin_addr.s_addr = inet_addr(SERVER_IP_ADDRESS);
+        /* Populate it with server's address details */
+        serv_addr.sin_family = AF_INET;
+        serv_addr.sin_port = htons((uint16_t)(atoi(serv_buffer))); 
+        serv_addr.sin_addr.s_addr = inet_addr(SERVER_IP_ADDRESS);
 
-    /* Get the message from client */
-    //printf("Enter the message you want to sent to server:\n");
-    //gets(client_buff);
+        /* Get the message from client */
+        //printf("Enter the message you want to sent to server:\n");
+        //gets(client_buff);
 
-    if(connect(sock_fd, (struct sockaddr *)&serv_addr,sizeof(serv_addr)) != 0)
-    {
-        perror("connect");
-        printf("Error connecting to server\n");
-        close(sock_fd);
-        exit(1);
-    }
-    else
-	    printf("Connection successful\n");
+        if(connect(sock_fd, (struct sockaddr *)&serv_addr,sizeof(serv_addr)) != 0)
+        {
+            perror("connect");
+            printf("Error connecting to server\n");
+            close(sock_fd);
+            exit(1);
+        }
+        else
+            printf("Connection successful\n");
 
-    /* Send the message to server */
-    //printf("%c\n",client_buff[1]);
-    c_size = send(sock_fd, client_buff, strlen(client_buff) + 1, 0);
+        /* Send the message to server */
+        //printf("%c\n",client_buff[1]);
+        c_size = send(sock_fd, client_buff, strlen(client_buff) + 1, 0);
 
-    if(c_size > 0)
-	    printf("Message sent to server successsfully, please check\n");
-    else
-	    printf("Error: Message send\n");
-    
-    recv(sock_fd, (void *) serv_buffer,SERVER_BUFF,0);
-    printf("Receved data %s\n", serv_buffer);
+        if(c_size > 0)
+            printf("Message sent to server successsfully, please check\n");
+        else
+            printf("Error: Message send\n");
+        
+        recv(sock_fd, (void *) serv_buffer,SERVER_BUFF,0);
+        printf("Receved data %s\n", serv_buffer);
+    }   
     close(sock_fd);
 
 
